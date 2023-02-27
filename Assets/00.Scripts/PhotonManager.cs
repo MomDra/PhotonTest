@@ -20,6 +20,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private Button connectToMaster;
     [SerializeField]
     private Button disconnectToServer;
+    [SerializeField]
+    private Button joinLobbyButton;
+    [SerializeField]
+    private Button createRoomButton;
+    [SerializeField]
+    private Button joinRoomButton;
+    [SerializeField]
+    private Button joinOrCreateRoomButton;
+    [SerializeField]
+    private Button joinRandomRoomButton;
+    [SerializeField]
+    private Button leaveRoomButton;
 
     private void Awake()
     {
@@ -27,6 +39,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         connectToMaster.onClick.AddListener(ConnectToMaster);
         disconnectToServer.onClick.AddListener(DisconnectToServer);
+        joinLobbyButton.onClick.AddListener(JoinLobby);
+        createRoomButton.onClick.AddListener(CreateRoom);
+        joinRoomButton.onClick.AddListener(JoinRoom);
+        joinOrCreateRoomButton.onClick.AddListener(JoinOrCreateRoom);
+        joinRandomRoomButton.onClick.AddListener(JoinRandomRoom);
+        leaveRoomButton.onClick.AddListener(LeaveRoom);
     }
 
     private void Update()
@@ -58,6 +76,55 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.Log("Disconnected to server? maybe?");
+    }
 
+    private void CreateRoom()
+    {
+        PhotonNetwork.CreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 });
+    }
+
+    private void JoinRoom()
+    {
+        PhotonNetwork.JoinRoom(roomInput.text);
+    }
+
+    private void JoinOrCreateRoom()
+    {
+        PhotonNetwork.JoinOrCreateRoom(roomInput.text, new RoomOptions { MaxPlayers = 2 }, null);
+    }
+
+    private void JoinRandomRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    private void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnCreatedRoom()
+    {
+        Debug.Log("Making room is completed");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("JoinRoom is completed");
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Making room is failed");
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Joing room is failed");
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("Join random room is failed");
     }
 }
