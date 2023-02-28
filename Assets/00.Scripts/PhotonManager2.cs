@@ -135,14 +135,48 @@ public class PhotonManager2 : MonoBehaviourPunCallbacks
 
     private void OnCellClicked(int index)
     {
-
+        PhotonNetwork.JoinRoom(myList[index].Name);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        for (int i = 0; i < roomList.Count; ++i)
+        {
+            Debug.Log($"{i}: {roomList[i].Name}, {roomList[i].RemovedFromList}");
 
+            bool isContain = myList.Contains(roomList[i]);
+
+            if (!roomList[i].RemovedFromList)
+            {
+                if (!isContain)
+                {
+                    myList.Add(roomList[i]);
+                }
+                else
+                {
+                    myList[myList.IndexOf(roomList[i])] = roomList[i];
+                }
+            }
+            else
+            {
+                myList.Remove(roomList[i]);
+            }
+        }
+
+        RommListRenewal();
     }
 
+    private void RommListRenewal()
+    {
+        for (int i = 0; i < cellBtns.Length; ++i)
+        {
+            bool isActive = i < myList.Count;
+
+            cellBtns[i].interactable = isActive ? true : false;
+            cellBtns[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = isActive ? myList[i].Name : "";
+            cellBtns[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = isActive ? $"{myList[i].PlayerCount} / {myList[i].MaxPlayers}" : "";
+        }
+    }
 
     public override void OnJoinedRoom()
     {
