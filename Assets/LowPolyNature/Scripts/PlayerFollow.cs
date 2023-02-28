@@ -29,27 +29,27 @@ public class PlayerFollow : MonoBehaviour
         _cameraOffset = transform.position - PlayerTransform.position;
     }
 
-    private bool IsRotateActive
-    {
-        get
-        {
-            if (!RotateAroundPlayer)
-                return false;
+    // private bool IsRotateActive
+    // {
+    //     get
+    //     {
+    //         if (!RotateAroundPlayer)
+    //             return false;
 
-            if (!RotateMiddleMouseButton)
-                return true;
+    //         if (!RotateMiddleMouseButton)
+    //             return true;
 
-            if (RotateMiddleMouseButton && Input.GetMouseButton(2))
-                return true;
+    //         if (RotateMiddleMouseButton && Input.GetMouseButton(2))
+    //             return true;
 
-            return false;
-        }
-    }
+    //         return false;
+    //     }
+    // }
 
     // LateUpdate is called after Update methods
     void LateUpdate()
     {
-        if (IsRotateActive)
+        if (RotateAroundPlayer)
         {
 
             float h = Input.GetAxis("Mouse X") * RotationsSpeed;
@@ -77,5 +77,10 @@ public class PlayerFollow : MonoBehaviour
 
         if (LookAtPlayer || RotateAroundPlayer)
             transform.LookAt(PlayerTransform);
+    }
+
+    public void SetCameratarget(Transform playerTransform)
+    {
+        PlayerTransform = playerTransform;
     }
 }

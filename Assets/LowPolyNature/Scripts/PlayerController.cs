@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private int startFood;
 
     private bool mCanTakeDamage = true;
+
+    private PhotonView view;
 
     #endregion
 
@@ -73,6 +76,8 @@ public class PlayerController : MonoBehaviour
         mFoodBar.SetValue(Food);
 
         InvokeRepeating("IncreaseHunger", 0, HungerRate);
+
+        view = GetComponent<PhotonView>();
     }
 
 
@@ -345,6 +350,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!view.IsMine) return;
+
         if (!IsDead && mIsControlEnabled)
         {
             // Interact with the item
